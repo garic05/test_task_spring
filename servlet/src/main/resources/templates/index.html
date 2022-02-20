@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="form_date">
+    <form th:action="@{/}"
+          method="post">
+        <input type="date" name="date"/>
+        <input type="submit"/>
+    </form>
+</div>
+<div class="other">
+    <div class="films_date">
+        <p>films rate date:</p>
+        <p th:text="${films_rate_date}"/>
+    </div>
+    <div class="films">
+        <div th:if="${films == null || films.isEmpty()}">
+            <p>no films in db</p>
+        </div>
+        <div th:if="${films != null && !films.isEmpty()}">
+            <div th:each="film : ${films}">
+                <div><span>name: </span><span th:text="${film.getName()}"></span></div>
+                <div><span>year: </span><span th:text="${film.getYear()}"></span></div>
+                <div><span>rate: </span><span th:text="${film.getRate()}"></span></div>
+                <div><span>count of voters: </span><span th:text="${film.getCntVoters()}"></span></div>
+                <p/>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
