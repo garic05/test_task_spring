@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS film
 (
-    id         BIGINT PRIMARY KEY,
+    id         SERIAL PRIMARY KEY,
     rate       FLOAT,
     rate_date  DATE,
     name       VARCHAR(1023),
