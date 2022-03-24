@@ -1,15 +1,7 @@
-package com.example.consoleapp.config;
+package com.example.servlet.config;
 
 
-import com.example.consoleapp.converter.FilmConverter;
-import com.example.consoleapp.converter.HtmlToJsoupElementsConverter;
-import com.example.consoleapp.dao.FilmDao;
-import com.example.consoleapp.request.Requester;
-import com.example.consoleapp.request.RequesterImpl;
-import com.example.consoleapp.service.FilmService;
-import com.example.consoleapp.service.FilmServiceImpl;
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,32 +31,11 @@ public class BaseConfiguration {
     @Value("${spring.jpa.hibernate.ddl-auto}") private String ddl_auto;
     @Value("${spring.jpa.properties.hibernate.show_sql}") private  String show_sql;
     @Value("${spring.jpa.properties.hibernate.format_sql}") private String format_sql;
-
+    @Value("${spring.jpa.properties.hibernate.cache.region.factory_class}") private String factory_class;
+    @Value("${spring.jpa.properties.hibernate.cache.use_second_level_cache}") private String use_2nd_lvl_cache;
     @Value("${hibernate.packages_to_scan}") String packages_to_scan;
 
-    @Bean
-    @Qualifier("RequesterImpl")
-    public Requester<String> filmRequester() {
-        return new RequesterImpl();
-    }
 
-    @Bean
-    @Qualifier("FilmConverter")
-    public FilmConverter filmConverter() {
-        return new FilmConverter();
-    }
-
-    @Bean
-    @Qualifier("HtmlConverter")
-    public HtmlToJsoupElementsConverter htmlConverter() {
-        return new HtmlToJsoupElementsConverter();
-    }
-
-    @Bean
-    @Qualifier("FilmService")
-    public FilmService filmService(FilmDao filmDao) {
-        return new FilmServiceImpl(filmDao);
-    }
 
 
 
@@ -84,12 +55,11 @@ public class BaseConfiguration {
         LocalContainerEntityManagerFactoryBean em
                 = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
-        em.setPackagesToScan("com.example.consoleapp");
+        em.setPackagesToScan(packages_to_scan);
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
         em.setJpaProperties(additionalProperties());
-
         return em;
     }
     @Bean
@@ -113,6 +83,8 @@ public class BaseConfiguration {
         properties.setProperty("hibernate.hbm2ddl.auto", ddl_auto);
         properties.setProperty("show_sql", show_sql);
         properties.setProperty("format_sql", format_sql);
+        properties.setProperty("hibernate.cache.region.factory_class", factory_class);
+        properties.setProperty("hibernate.cache.use_second_level_cache", use_2nd_lvl_cache);
 
         return properties;
     }

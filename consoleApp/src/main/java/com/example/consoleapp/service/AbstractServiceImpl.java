@@ -18,7 +18,7 @@ public abstract class AbstractServiceImpl<T, PK> implements AbstractService<T, P
 
     @Override
     public T findById(PK id) {
-        return abstractDao.findById(id).get();
+        return abstractDao.findById(id);
     }
 
     @Override

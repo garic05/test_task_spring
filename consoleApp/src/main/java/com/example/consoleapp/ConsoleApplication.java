@@ -14,7 +14,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 
+import java.io.IOException;
 import java.sql.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -28,10 +30,10 @@ public class ConsoleApplication {
     private final String URL;
 
     public ConsoleApplication(@Qualifier("FilmService") FilmService filmService,
-                                           @Qualifier("RequesterImpl") Requester<String> requester,
-                                           @Qualifier("FilmConverter") FilmConverter filmConverter,
-                                           @Qualifier("HtmlConverter") HtmlToJsoupElementsConverter htmlConverter,
-                                           @Value("${kinopoisk.url}") String URL) {
+                              @Qualifier("RequesterImpl") Requester<String> requester,
+                              @Qualifier("FilmConverter") FilmConverter filmConverter,
+                              @Qualifier("HtmlConverter") HtmlToJsoupElementsConverter htmlConverter,
+                              @Value("${kinopoisk.url}") String URL) {
         this.filmService = filmService;
         this.requester = requester;
         this.filmConverter = filmConverter;
@@ -44,7 +46,7 @@ public class ConsoleApplication {
     }
 
     @EventListener(ApplicationReadyEvent.class)
-    public void start() {
+    public void start() throws IOException {
         List<Film> filmsToday = filmService.getAllByRateDate(new Date(new java.util.Date().getTime()));
         if (filmsToday == null || filmsToday.isEmpty()) {
             String s = requester.request(URL);
